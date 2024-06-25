@@ -9,6 +9,7 @@ import java.util.List;
 public class ConverteDados implements IConverteDados{
     private ObjectMapper mapper = new ObjectMapper();
 
+    // Converte um JSON em um objeto da classe especificada
     @Override
     public <T> T obterDados(String json, Class<T> classe) {
         try {
@@ -18,6 +19,7 @@ public class ConverteDados implements IConverteDados{
         }
     }
 
+    // Converte um JSON em uma lista de objetos da classe especificada
     @Override
     public <T> List<T> recebeLista(String json, Class<T> classe) {
         CollectionType lista = mapper.getTypeFactory()

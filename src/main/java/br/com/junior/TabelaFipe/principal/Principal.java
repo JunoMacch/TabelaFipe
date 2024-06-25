@@ -13,12 +13,17 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Principal {
+    // Scanner para leitura de entradas do usuário
     private Scanner leitura = new Scanner(System.in);
+
+    // Instâncias das classes de serviço para consumo da API e conversão de dados
     private ConsumoApi consumo = new ConsumoApi();
     private ConverteDados conversor = new ConverteDados();
 
+    // URL base da API Tabela Fipe
     private final String URL_BASE = "https://parallelum.com.br/fipe/api/v1/";
 
+    // Método que exibe o menu e gerencia as interações com o usuário
     public void exibeMenu() {
         String resposta;
         do {
@@ -34,6 +39,7 @@ public class Principal {
             var opcao = leitura.nextLine();
             String endereco;
 
+            // Determina o endpoint da API com base na escolha do usuário
             if (opcao.toLowerCase().contains("carr")) {
                 endereco = URL_BASE + "carros/marcas";
             } else if ((opcao.toLowerCase().contains("mot"))) {
@@ -42,6 +48,7 @@ public class Principal {
                 endereco = URL_BASE + "caminhoes/marcas";
             }
 
+            // Consome a API para obter as marcas e exibe as marcas ordenadas
             var json = consumo.obterDados(endereco);
             System.out.println(json);
 
@@ -53,6 +60,7 @@ public class Principal {
             System.out.println("Informe o código da marca para consultar modelos e anos");
             var codigoMarca = leitura.nextLine();
 
+            // Obtém os modelos de veículos da marca escolhida
             endereco = endereco + "/" + codigoMarca + "/modelos";
             json = consumo.obterDados(endereco);
             var listModelo = conversor.obterDados(json, Modelos.class);
@@ -65,6 +73,7 @@ public class Principal {
             System.out.println("\nDigite um trecho do nome do carro a ser buscado");
             var modeloVeiculo = leitura.nextLine();
 
+            // Filtra modelos de veículos pelo nome fornecido
             List<DadosVeiculo> filtroModelos = listModelo.modelos().stream()
                     .filter(m -> m.nome().toLowerCase().contains(modeloVeiculo.toLowerCase()))
                     .collect(Collectors.toList());
@@ -75,11 +84,13 @@ public class Principal {
             System.out.println("Digite o código do modelo para consultar informações");
             var codigoModelo = leitura.nextLine();
 
+            // Obtém os anos de fabricação do modelo escolhido
             endereco = endereco + "/" + codigoModelo + "/anos";
             json = consumo.obterDados(endereco);
             List<DadosVeiculo> anos = conversor.recebeLista(json, DadosVeiculo.class);
             List<Veiculo> veiculos = new ArrayList<>();
 
+            // Para cada ano, obtém as informações detalhadas do veículo
             for (int i = 0; i < anos.size(); i++) {
                 var enderecoAnos = endereco + "/" + anos.get(i).codigo();
                 json = consumo.obterDados(enderecoAnos);

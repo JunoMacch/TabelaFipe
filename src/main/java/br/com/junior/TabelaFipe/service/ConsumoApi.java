@@ -7,6 +7,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class ConsumoApi {
+    // Método para obter dados da API fornecendo um endpoint
     public String obterDados(String endereco) {
 
         HttpClient client = HttpClient.newHttpClient();
@@ -23,6 +24,7 @@ public class ConsumoApi {
             throw new RuntimeException(e);
         }
 
+        // Retorna o corpo da resposta como String
         String json = response.body();
         return json;
 
